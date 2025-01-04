@@ -1,42 +1,22 @@
-import { useState } from "react";
 import Counter from "./components/Counter";
 import States from "./components/States";
 import "./index.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  decrement,
+  increment,
+} from "./components/features/counters/countersSlice";
+import Posts from "./components/Posts";
 
-const initialCounters = [
-  {
-    id: 1,
-    value: 0,
-  },
-  {
-    id: 2,
-    value: 0,
-  },
-];
 function App() {
-  const [counters, setCounters] = useState(initialCounters);
+  const counters = useSelector((state) => state.counters);
+  const dispatch = useDispatch();
   const totalCount = counters.reduce((sum, current) => sum + current.value, 0);
   const handleIncrement = (counterId) => {
-    const UpdatedCounter = counters.map((counter) => {
-      if (counter.id === counterId)
-        return {
-          ...counter,
-          value: counter.value + 1,
-        };
-      return counter;
-    });
-    setCounters(UpdatedCounter);
+    dispatch(increment(counterId));
   };
   const handleDecrement = (counterId) => {
-    const UpdatedCounter = counters.map((counter) => {
-      if (counter.id === counterId)
-        return {
-          ...counter,
-          value: counter.value - 1,
-        };
-      return counter;
-    });
-    setCounters(UpdatedCounter);
+    dispatch(decrement(counterId));
   };
   return (
     <div className="w-screen h-screen p-10 bg-gray-100 text-slate-700">
@@ -53,6 +33,7 @@ function App() {
           />
         ))}
         <States totalCount={totalCount} />
+        <Posts />
       </div>
     </div>
   );
